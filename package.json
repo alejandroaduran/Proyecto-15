@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "colors": "^1.4.0"
+    "colors": "^1.4.0",
+    "express-validator": "^7.2.1"
   }
 }
