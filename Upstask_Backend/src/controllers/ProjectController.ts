@@ -43,7 +43,7 @@ export class ProjectController {
             res.json(project)
         } catch (error) {
             console.log(error)
-            res.status(500).json({ message: "Error fetching projects" })
+            res.status(500).json({ message: "Error fetching project" })
         }
     }
 
@@ -64,7 +64,26 @@ export class ProjectController {
 
         } catch (error) {
             console.log(error)
-            res.status(500).json({ message: "Error fetching projects" })
+            res.status(500).json({ message: "Error fetching project" })
+        }
+    }
+
+    static deleteProject = async (req: Request, res: Response): Promise<void> => {
+        const { id } = req.params
+        console.log(id)
+        try {
+            const project = await Project.findById(id)
+            //console.log(project)
+            if (!project) {
+                const error = new Error("Project not found")
+                res.status(400).json({ error: error.message })
+            }
+            await project.deleteOne()
+            res.send("Project deleted")
+
+        } catch (error) {
+            console.log(error)
+            res.status(404).json({ message: "Error deleting project" })
         }
     }
 }
