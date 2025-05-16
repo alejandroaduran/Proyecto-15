@@ -12,7 +12,7 @@ export type TaskStatus = typeof taskStatus[keyof typeof taskStatus]
 // This will be a union of the values of the taskStatus object
 
 export interface ITask extends Document {
-    projectName: string;
+    Name: string;
     description: string;
     project: Types.ObjectId;
     status: TaskStatus;
