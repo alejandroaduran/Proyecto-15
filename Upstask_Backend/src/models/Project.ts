@@ -1,9 +1,11 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Document, Schema, PopulatedDoc, Types } from "mongoose";
+import { ITask } from "./Task";
 
 export interface Iproject extends Document {
     projectName: string;
     clientName: string;
     description: string;
+    tasks: PopulatedDoc<ITask[] & Document>[];
 }
 
 const ProjectSchema: Schema = new Schema({
@@ -22,8 +24,15 @@ const ProjectSchema: Schema = new Schema({
         type: String,
         required: true,
         trim: true,
-    }
-})
+    },
+    tasks: [
+        {
+            type: Types.ObjectId,
+            ref: "Task"
+        }
+    ]
+}, {timestamps: true});
+// {timestamps: true} adds createdAt and updatedAt fields to the schema
 
 const Project = mongoose.model<Iproject>("Project", ProjectSchema)
 export default Project
