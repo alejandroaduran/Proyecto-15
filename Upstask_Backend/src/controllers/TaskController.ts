@@ -19,4 +19,14 @@ export class TaskController {
             console.log("Error creating task:", error);
         }
     }
+
+    static getProjectTasks = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const tasks = await Task.find({ project: req.project.id }).populate("project")
+            res.json(tasks)
+            console.log(tasks)
+        } catch (error) {
+            res.status(500).json({ error: "Error getting tasks" })
+        }
+    }
 }
