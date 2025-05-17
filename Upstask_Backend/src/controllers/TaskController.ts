@@ -49,4 +49,51 @@ export class TaskController {
         }
     }
 
+    static updateTask = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const { taskId } = req.params;
+            const task = await Task.findById(taskId);
+            if (!task) {
+                const error = new Error("Task not found");
+                res.status(404).json({ error: error.message });
+                return;
+            }
+            if (task.project.toString() !== req.project.id) {
+                const error = new Error("Not valid action");
+                res.status(400).json({ error: error.message });
+                return;
+            }
+            task.name = req.body.name
+            task.description = req.body.description
+            await task.save()
+            res.json({ message: "Task updated", task });
+        } catch (error) {
+            res.status(500).json({ error: "Error updating task" });
+        }
+    }
+
+    static deleteTask = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const { taskId } = req.params;
+            const task = await Task.findById(taskId, req.body);
+            if (!task) {
+                const error = new Error("Task not found");
+                res.status(404).json({ error: error.message });
+                return;
+            }
+            if (task.project.toString() !== req.project.id) {
+                const error = new Error("Not valid action");
+                res.status(400).json({ error: error.message });
+                return;
+            }
+            req.project.tasks = req.project.tasks.filter((task: any) => task.toString() !== taskId)
+
+            await Promise.allSettled([task.deleteOne(), req.project.save()])
+
+            res.json({ message: "Task deleted", task });
+        } catch (error) {
+            res.status(500).json({ error: "Error updating task" });
+        }
+    }
+
 }

@@ -51,8 +51,9 @@ router.delete("/:id",
 )
 
 //Routes for tasks
+router.param("projectId", validateProjectExists) //permite ejecutar validateProjectExists en cada ruta que tenga el parametro projectId
+
 router.post("/:projectId/tasks",
-    validateProjectExists,
     body("name")
         .notEmpty().withMessage("task name is required"),
     body("description")
@@ -62,13 +63,29 @@ router.post("/:projectId/tasks",
 )
 
 router.get("/:projectId/tasks",
-    validateProjectExists,
     TaskController.getProjectTasks
 )
 
 router.get("/:projectId/tasks/:taskId",
-    validateProjectExists,
+    param("taskId").isMongoId().withMessage("Invalid project ID"),
+    handleInputErrors,
     TaskController.getTaskById
+)
+
+router.put("/:projectId/tasks/:taskId",
+    param("taskId").isMongoId().withMessage("Invalid project ID"),
+    body("name")
+        .notEmpty().withMessage("task name is required"),
+    body("description")
+        .notEmpty().withMessage("task description is required"),
+    handleInputErrors,
+    TaskController.updateTask
+)
+
+router.delete("/:projectId/tasks/:taskId",
+    param("taskId").isMongoId().withMessage("Invalid project ID"),
+    handleInputErrors,
+    TaskController.deleteTask
 )
 
 export default router
