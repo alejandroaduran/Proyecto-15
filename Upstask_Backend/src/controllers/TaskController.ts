@@ -96,4 +96,22 @@ export class TaskController {
         }
     }
 
+    static updateStatus = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const { taskId } = req.params
+            const task = await Task.findById(taskId)
+            if (!task) {
+                const error = new Error("Task not found");
+                res.status(404).json({ error: error.message });
+            }
+            const { status } = req.body
+            task.status = status
+            await task.save()
+            res.send("Status updated")
+
+        } catch (error) {
+            res.status(500).json({ error: "Error updating task" });
+        }
+
+    }
 }
