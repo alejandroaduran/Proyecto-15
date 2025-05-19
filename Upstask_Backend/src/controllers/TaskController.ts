@@ -30,16 +30,13 @@ export class TaskController {
         }
     }
 
-    static getTaskById = async (req: Request, res: Response): Promise<void> => {
+    static getTaskById = async (req: Request, res: Response) => {
         try {
-            if (req.task.project.toString() !== req.project.id) {
-                const error = new Error("Not valid action")
-                res.status(400).json({ error: error.message })
-            }
             res.json(req.task)
+            return
         } catch (error) {
             res.status(500).json({ error: "Error getting tasks" })
-
+            return
         }
     }
 
