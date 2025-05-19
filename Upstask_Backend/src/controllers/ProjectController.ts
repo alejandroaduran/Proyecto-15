@@ -1,5 +1,6 @@
 import { Request, Response } from "express"
 import Project from "../models/Project"
+import { isDataView } from "node:util/types"
 
 
 export class ProjectController {
@@ -52,13 +53,16 @@ export class ProjectController {
         const { id } = req.params
         //console.log(id)
         try {
-            const project = await Project.findByIdAndUpdate(id, req.body)
+            const project = await Project.findById(id)
 
             if (!project) {
                 const error = new Error("Project not found")
                 res.status(400).json({ error: error.message })
             }
-
+            project.clientName = req.body.clientName
+            project.projectName = req.body.projectName
+            project.description = req.body.description
+            
             await project.save()
             res.send("Project updated")
 

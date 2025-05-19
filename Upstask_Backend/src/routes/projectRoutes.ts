@@ -24,17 +24,19 @@ router.post("/",
 // Get all projects
 router.get("/", ProjectController.getAllProjects)
 
+router.param("id", projectExists) //permite ejecutar projectExists en cada ruta que tenga el parametro Id
+
 // Get project by ID
 router.get("/:id",
-    param("id").isMongoId().withMessage("Invalid project ID"),
-    handleInputErrors,
+ /*    param("id").isMongoId().withMessage("Invalid project ID"),
+  */   handleInputErrors,
     ProjectController.getProjectById
 )
 
 // Update project by ID
 router.put("/:id",
-    param("id").isMongoId().withMessage("Invalid project ID"),
-    body("projectName")
+ /*    param("id").isMongoId().withMessage("Invalid project ID"),
+  */   body("projectName")
         .notEmpty().withMessage("Project name is required"),
     body("clientName")
         .notEmpty().withMessage("client name is required"),
@@ -46,8 +48,8 @@ router.put("/:id",
 
 // Delete project by ID
 router.delete("/:id",
-    param("id").isMongoId().withMessage("Invalid project ID"),
-    handleInputErrors,
+ /*    param("id").isMongoId().withMessage("Invalid project ID"),
+  */   handleInputErrors,
     ProjectController.deleteProject
 )
 
