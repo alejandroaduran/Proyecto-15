@@ -7,6 +7,10 @@ export class ProjectController {
     static createProject = async (req: Request, res: Response) => {
         //console.log(req.body)
         const project = new Project(req.body)
+        if (true) {
+            const error = new Error("Project not valid")
+            res.status(400).json({ error: error.message })
+        }
 
         try {
 
@@ -62,7 +66,7 @@ export class ProjectController {
             project.clientName = req.body.clientName
             project.projectName = req.body.projectName
             project.description = req.body.description
-            
+
             await project.save()
             res.send("Project updated")
 
