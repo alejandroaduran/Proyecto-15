@@ -2,7 +2,7 @@ import { z } from "zod"
 
 /* tasks */
 export const taskStatusSchema = z.enum([
-    "pending", "on-hold", "in-progress", "under-review", "completed"
+    "pending", "onHold", "inProgress", "underReview", "completed"
 ])
 
 export const taskSchema = z.object({
