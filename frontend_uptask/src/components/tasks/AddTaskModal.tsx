@@ -26,18 +26,17 @@ export default function AddTaskModal() {
         name: "",
         description: "",
     }
-    const { register, handleSubmit, formState: { errors } } = useForm({ defaultValues: initialValues })
-    
+    const { register, handleSubmit, formState: { errors }, reset } = useForm({ defaultValues: initialValues })
+
     const handleCreateTask = (FormData: TaskFormData) => {
         //console.log("Creating task with data:", FormData);
         const data = {
             formData: FormData,
             projectId: projectId
         }
-       //console.log("Data to send:", data);
-       mutate(data);
-        // Close the modal after creating the task
-        navigate(location.pathname, { replace: true });
+        //console.log("Data to send:", data);
+        mutate(data);
+
     }
 
     const { mutate } = useMutation({
@@ -47,6 +46,9 @@ export default function AddTaskModal() {
         },
         onSuccess: (data) => {
             toast.success(data)
+            reset()
+            // Close the modal after creating the task
+            navigate(location.pathname, { replace: true });
         }
     })
 
