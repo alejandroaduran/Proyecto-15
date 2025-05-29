@@ -1,29 +1,55 @@
 import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import TaskForm from './TaskForm';
 import type { TaskFormData } from '@/types/index';
+import { useMutation } from '@tanstack/react-query';
+import { createTask } from '@/api/TaskAPI';
+import { toast } from 'react-toastify';
 
 export default function AddTaskModal() {
     const navigate = useNavigate()
     // Hook to get the current location
     const location = useLocation()
     const queryParams = new URLSearchParams(location.search)
-    /*     console.log(location.search)
-        console.log(queryParams) */
     const modalTask = queryParams.get('newTask')
-    console.log(modalTask)
     const show = modalTask === 'true' ? true : false
+
+
+    //Obtain projectId from the URL
+    //const projectId = queryParams.get('projectId')
+    const params = useParams()
+    const projectId = params.projectId!
 
     const initialValues: TaskFormData = {
         name: "",
         description: "",
     }
     const { register, handleSubmit, formState: { errors } } = useForm({ defaultValues: initialValues })
+    
     const handleCreateTask = (FormData: TaskFormData) => {
-        console.log("Creating task with data:", FormData);
+        //console.log("Creating task with data:", FormData);
+        const data = {
+            formData: FormData,
+            projectId: projectId
+        }
+       //console.log("Data to send:", data);
+       mutate(data);
+        // Close the modal after creating the task
+        navigate(location.pathname, { replace: true });
     }
+
+    const { mutate } = useMutation({
+        mutationFn: createTask,
+        onError: (error) => {
+            toast.error(`Error creating task: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        },
+        onSuccess: (data) => {
+            toast.success(data)
+        }
+    })
+
     return (
         <>
             <Transition appear show={show} as={Fragment}>
