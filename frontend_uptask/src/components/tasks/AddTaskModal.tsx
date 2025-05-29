@@ -1,12 +1,22 @@
 import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function AddTaskModal() {
+    const navigate = useNavigate()
+    // Hook to get the current location
+    const location = useLocation()
+    const queryParams = new URLSearchParams(location.search)
+    /*     console.log(location.search)
+        console.log(queryParams) */
+    const modalTask = queryParams.get('newTask')
+    console.log(modalTask)
+    const show = modalTask === 'true' ? true : false
 
     return (
         <>
-            <Transition appear show={true} as={Fragment}>
-                <Dialog as="div" className="relative z-10" onClose={() => { }}>
+            <Transition appear show={show} as={Fragment}>
+                <Dialog as="div" className="relative z-10" onClose={() => navigate(location.pathname,{replace: true})}>
                     <Transition.Child
                         as={Fragment}
                         enter="ease-out duration-300"
