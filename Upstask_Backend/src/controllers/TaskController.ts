@@ -42,17 +42,20 @@ export class TaskController {
 
     static updateTask = async (req: Request, res: Response): Promise<void> => {
         try {
+            console.log("Update payload:", req.body);
+            console.log("Task to update:", req.task);
 
             if (req.task.project.toString() !== req.project.id) {
                 const error = new Error("Not valid action");
                 res.status(400).json({ error: error.message });
                 return;
             }
-            req.task.name = req.body.name
-            req.task.description = req.body.description
-            await req.task.save()
+            req.task.name = req.body.name;
+            req.task.description = req.body.description;
+            await req.task.save();
             res.send("Task updated");
         } catch (error) {
+            console.error("Error updating task:", error);
             res.status(500).json({ error: "Error updating task" });
         }
     }

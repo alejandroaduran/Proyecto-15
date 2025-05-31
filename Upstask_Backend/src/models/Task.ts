@@ -2,9 +2,9 @@ import mongoose, { Schema, Document, Types } from "mongoose"
 
 const taskStatus = {
     PENDING: "pending",
-    ON_HOLD: "on-hold",
-    IN_PROGRESS: "in-progress",
-    UNDER_REVIEW: "under-review",
+    ON_HOLD: "onHold",
+    IN_PROGRESS: "inProgress",
+    UNDER_REVIEW: "underReview",
     COMPLETED: "completed",
 } as const // as const makes the object readonly and infers the type of the keys
 
