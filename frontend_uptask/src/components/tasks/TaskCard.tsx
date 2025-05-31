@@ -1,6 +1,7 @@
 import type { Task } from "@/types/index"
 import { Menu, Transition } from "@headlessui/react"
 import { EllipsisVerticalIcon } from "@heroicons/react/20/solid"
+import { useNavigate } from "react-router-dom"
 import { Fragment } from "react/jsx-runtime"
 
 type TaskCardProps = {
@@ -8,6 +9,9 @@ type TaskCardProps = {
 }
 
 export default function TaskCard({ task }: TaskCardProps) {
+
+const navigate = useNavigate()
+
     return (
         <li className="bg-white shadow-md rounded-lg p-5 flex justify-between gap-3">
             <div className="min-w-0 flex flex-col gap-y-4">
@@ -36,7 +40,9 @@ export default function TaskCard({ task }: TaskCardProps) {
                                 </button>
                             </Menu.Item>
                             <Menu.Item>
-                                <button type='button' className='block px-3 py-1 text-sm leading-6 text-gray-900'>
+                                <button 
+                                onClick={()=> navigate(location.pathname + `?EditTask=${task._id}`)}
+                                type='button' className='block px-3 py-1 text-sm leading-6 text-gray-900'>
                                     Edit Task
                                 </button>
                             </Menu.Item>
