@@ -26,5 +26,5 @@ export default function EditTaskData() {
         }
     })
 
-    if (data) return <EditTaskModal />
+    if (data && taskId) return <EditTaskModal data={data} taskId={taskId} />
 }

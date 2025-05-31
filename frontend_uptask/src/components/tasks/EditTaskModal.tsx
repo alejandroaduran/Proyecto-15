@@ -1,9 +1,57 @@
 import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import type { TaskFormData, Task } from '@/types/index';
+import { useForm } from 'react-hook-form';
+import TaskForm from './TaskForm';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { updateTask } from '@/api/TaskAPI';
+import { toast } from 'react-toastify';
 
-export default function EditTaskModal() {
+type EditTaskModalProps = {
+    data: Task
+    taskId: Task["_id"]
+}
+
+export default function EditTaskModal({ data, taskId }: EditTaskModalProps) {
+
     const navigate = useNavigate()
+
+    const Params = useParams()
+    const projectId = Params.projectId!
+
+    const { register, handleSubmit, formState: { errors }, reset } = useForm<TaskFormData>({
+        defaultValues: {
+            name: data.name,
+            description: data.description,
+        }
+    })
+    const queryClient = useQueryClient()
+
+    const { mutate } = useMutation({
+        mutationFn: updateTask,
+        onError: (error: Error) => {
+            toast.error(error.message)
+        },
+        onSuccess: (data) => {
+            queryClient.invalidateQueries({ queryKey: ['editProject', projectId] });
+            toast.success(data)
+            reset()
+            // Close the modal after creating the task
+            navigate(location.pathname, { replace: true });
+        }
+    })
+
+    const handleEditTask = (formData: TaskFormData) => {
+        const data = {
+            projectId,
+            taskId,
+            formData
+        }
+        console.log("Editing task with data:", data);
+        mutate(data)
+    }
+
 
     return (
         <Transition appear show={true} as={Fragment}>
@@ -36,24 +84,28 @@ export default function EditTaskModal() {
                                     as="h3"
                                     className="font-black text-4xl  my-5"
                                 >
-                                    Editar Tarea
+                                    Edit Task
                                 </Dialog.Title>
 
-                                <p className="text-xl font-bold">Realiza cambios a una tarea en {''}
-                                    <span className="text-fuchsia-600">este formulario</span>
+                                <p className="text-xl font-bold">Make changes to a Task on{''}
+                                    <span className="text-fuchsia-600">this form</span>
                                 </p>
 
                                 <form
                                     className="mt-10 space-y-3"
+                                    onSubmit={handleSubmit(handleEditTask)}
                                     noValidate
                                 >
 
-
+                                    <TaskForm
+                                        register={register}
+                                        errors={errors}
+                                    />
 
                                     <input
                                         type="submit"
                                         className=" bg-fuchsia-600 hover:bg-fuchsia-700 w-full p-3  text-white font-black  text-xl cursor-pointer"
-                                        value='Guardar Tarea'
+                                        value='Guardar Task'
                                     />
                                 </form>
                             </Dialog.Panel>
