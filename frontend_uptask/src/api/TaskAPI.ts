@@ -50,3 +50,17 @@ export async function updateTask({projectId, taskId,formData}: Pick<TaskAPI,"pro
         throw error;
     }
 }
+
+export async function deleteTask({ projectId, taskId }: Pick<TaskAPI, "projectId" | "taskId">) {
+    try {
+        const url = `projects/${projectId}/tasks/${taskId}`;
+        const { data } = await api.delete<string>(url);
+        return data;
+    } catch (error) {
+        if (isAxiosError(error) && error.response) {
+            console.error("Error fetching task:", error.response?.data);
+            throw new Error(error.response.data.error || "Error fetching task");
+        }
+        throw error;
+    }
+}
