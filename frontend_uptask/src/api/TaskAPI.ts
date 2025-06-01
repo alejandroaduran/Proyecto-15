@@ -1,12 +1,12 @@
 import api from "@/lib/axios";
 import { isAxiosError } from "axios";
-import type { TaskFormData, Project, Task } from "../types";
+import { type TaskFormData, type Project, type Task, taskSchema } from "../types";
 
 type TaskAPI = {
     formData: TaskFormData;
     projectId: Project["_id"];
     taskId: Task["_id"]
-    
+
 }
 
 export async function createTask({ formData, projectId }: Pick<TaskAPI, "formData" | "projectId">) {
@@ -27,7 +27,12 @@ export async function getTaskById({ projectId, taskId }: Pick<TaskAPI, "projectI
     try {
         const url = `projects/${projectId}/tasks/${taskId}`;
         const { data } = await api.get(url);
-        return data;
+        const response = taskSchema.safeParse(data);
+        //console.log("Response from getTaskById:", response);
+        if (response.success) {
+            return response.data;
+        }
+
     } catch (error) {
         if (isAxiosError(error) && error.response) {
             console.error("Error fetching task:", error.response?.data);
@@ -37,10 +42,10 @@ export async function getTaskById({ projectId, taskId }: Pick<TaskAPI, "projectI
     }
 }
 
-export async function updateTask({projectId, taskId,formData}: Pick<TaskAPI,"projectId"|"taskId"|"formData">) {
+export async function updateTask({ projectId, taskId, formData }: Pick<TaskAPI, "projectId" | "taskId" | "formData">) {
     try {
         const url = `projects/${projectId}/tasks/${taskId}`;
-        const { data } = await api.put<string>(url,formData);
+        const { data } = await api.put<string>(url, formData);
         return data;
     } catch (error) {
         if (isAxiosError(error) && error.response) {
