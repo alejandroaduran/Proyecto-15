@@ -48,6 +48,7 @@ export default function AddTaskModal() {
         },
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['editProject', projectId] });
+            
             toast.success(data)
             reset()
             // Close the modal after creating the task

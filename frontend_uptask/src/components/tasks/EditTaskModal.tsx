@@ -34,10 +34,11 @@ export default function EditTaskModal({ data, taskId }: EditTaskModalProps) {
             toast.error(error.message)
         },
         onSuccess: (data) => {
+            queryClient.invalidateQueries({ queryKey: ['projects', projectId] });
             queryClient.invalidateQueries({ queryKey: ['editProject', projectId] });
-            toast.success(data)
-            reset()
-            // Close the modal after creating the task
+            queryClient.invalidateQueries({ queryKey: ['tasks', taskId] });
+            toast.success(data);
+            reset();
             navigate(location.pathname, { replace: true });
         }
     })
@@ -87,7 +88,7 @@ export default function EditTaskModal({ data, taskId }: EditTaskModalProps) {
                                     Edit Task
                                 </Dialog.Title>
 
-                                <p className="text-xl font-bold">Make changes to a Task on{''}
+                                <p className="text-xl font-bold">Make changes to a Task on {''}
                                     <span className="text-fuchsia-600">this form</span>
                                 </p>
 
