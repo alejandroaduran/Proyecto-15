@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import User from "../models/User";
-import { hashPassword } from "../utils/auth";
+import { checkPassword, hashPassword } from "../utils/auth";
 import Token from "../models/Token";
 import { generateToken } from "../utils/token";
 import { AuthEmail } from "../emails/AuthEmails";
@@ -63,13 +63,52 @@ export class AuthController {
                 res.status(404).json({ error: "User not found." });
                 return
             }
-
-            //user.isActive = true;
-            await user.save();
+            user.confirmed = true;
+            await Promise.allSettled([user.save(), tokenExists.deleteOne()]);
             res.send("Account confirmed successfully!");
 
         } catch (error) {
             res.status(500).json({ error: "An error occurred while confirming the account." });
         }
+    }
+
+    static login = async (req: Request, res: Response) => {
+        try {
+            //res.send("Logging in...");
+            const { email, password } = req.body;
+            const user = await User.findOne({ email });
+            if (!user) {
+                const error = new Error("User not found.");
+                res.status(404).json({ error: error.message });
+                return;
+            }
+            const isValidPassword = await checkPassword(password, user.password.toString());
+            if (!isValidPassword) {
+                const error = new Error("Invalid email or password.");
+                res.status(401).json({ error: error.message });
+                return;
+            }
+            if (!user.confirmed) {
+                const token = new Token()
+                token.user = user.id
+                token.token = generateToken()
+                await token.save();
+                AuthEmail.sendConfirmationEmail(
+                    {
+                        email: String(user.email),
+                        name: String(user.name),
+                        token: String(token.token)
+                    }
+                )
+
+                const error = new Error("Account not confirmed. An email has been sent to confirm your account.");
+                res.status(403).json({ error: error.message });
+                return;
+            }
+            res.send("Login successful!");
+        } catch (error) {
+            res.status(500).json({ error: "An error occurred while logging in." });
+        }
+
     }
 }

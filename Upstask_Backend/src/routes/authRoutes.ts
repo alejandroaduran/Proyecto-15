@@ -25,4 +25,11 @@ router.post('/create-account',
         AuthController.confirmAccount
     )
 
+    router.post("/login",
+        body("email").isEmail().withMessage("Invalid email format"),
+        body("password").notEmpty().withMessage("Password is required"),
+        handleInputErrors,
+        AuthController.login
+    )
+
 export default router
