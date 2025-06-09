@@ -2,9 +2,12 @@ import { useForm } from "react-hook-form";
 import type { UserRegistrationForm } from "@/types/index";
 import ErrorMessage from "@/components/ErrorMessage";
 import { Link } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { createAccount } from "@/api/AuthAPI";
+import { toast } from "react-toastify";
 
 export default function RegisterView() {
-  
+
   const initialValues: UserRegistrationForm = {
     name: '',
     email: '',
@@ -14,9 +17,23 @@ export default function RegisterView() {
 
   const { register, handleSubmit, watch, reset, formState: { errors } } = useForm<UserRegistrationForm>({ defaultValues: initialValues });
 
+  const { mutate } = useMutation({
+    mutationFn: createAccount,
+    onError: (error) => {
+      console.error(error);
+      toast.error(error.message)
+    },
+    onSuccess: (data) => {
+      console.log(data);
+      toast.success(data);
+      reset();
+    }
+  })
+
   const password = watch('password');
 
-  const handleRegister = (formData: UserRegistrationForm) => {}
+  const handleRegister = (formData: UserRegistrationForm) => mutate(formData);
+
 
   return (
     <>
@@ -120,11 +137,11 @@ export default function RegisterView() {
           className="bg-fuchsia-600 hover:bg-fuchsia-700 w-full p-3  text-white font-black  text-xl cursor-pointer"
         />
       </form>
-            <nav className="mt-10 flex flex-col space-y-4">
-              <Link to="/auth/login" className="text-fuchsia-500 hover:underline">
-                Already have an account? Login
-              </Link>
-            </nav>
+      <nav className="mt-10 flex flex-col space-y-4">
+        <Link to="/auth/login" className="text-fuchsia-500 hover:underline">
+          Already have an account? Login
+        </Link>
+      </nav>
     </>
   )
 }
