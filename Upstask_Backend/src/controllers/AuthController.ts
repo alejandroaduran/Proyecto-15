@@ -112,7 +112,7 @@ export class AuthController {
 
     }
 
-        static requestConfirmationCode = async (req: Request, res: Response) => {
+    static requestConfirmationCode = async (req: Request, res: Response) => {
         //    res.send("Creating account...");
         try {
             const { email } = req.body;
@@ -125,7 +125,7 @@ export class AuthController {
                 return;
             }
 
-            if( user.confirmed) {
+            if (user.confirmed) {
                 const error = new Error("User already confirmed.");
                 res.status(403).json({ error: error.message });
                 return;
@@ -152,4 +152,78 @@ export class AuthController {
             res.status(500).json({ error: "An error occurred while creating the account." });
         }
     }
+
+    static forgotPassword = async (req: Request, res: Response) => {
+        //    res.send("Creating account...");
+        try {
+            const { email } = req.body;
+
+            // Check if the user already exists
+            const user = await User.findOne({ email });
+            if (!user) {
+                const error = new Error("User not found.");
+                res.status(404).json({ error: error.message });
+                return;
+            }
+
+            //Generate a confirmation token
+            const token = new Token()
+            token.token = generateToken()
+            token.user = user.id
+            await token.save();
+
+            //send email
+            AuthEmail.sendPasswordResetToken(
+                {
+                    email: String(user.email),
+                    name: String(user.name),
+                    token: String(token.token)
+                }
+            )
+
+            res.send("Token sent! check your email to reset your password.");
+
+        } catch (error) {
+            res.status(500).json({ error: "An error occurred while creating the account." });
+        }
+    }
+
+    static validateToken = async (req: Request, res: Response) => {
+        try {
+            const { token } = req.body;
+            console.log("Validating token:", token);
+            const tokenExists = await Token.findOne({ token });
+            if (!tokenExists) {
+                res.status(400).json({ error: "Invalid or expired token." });
+                return
+            }
+            res.send("Token is valid. You can reset your password now.");
+        } catch (error) {
+            res.status(500).json({ error: "An error occurred while validating the token." });
+        }
+    }
+
+    static updatePasswordWithToken = async (req: Request, res: Response) => {
+        try {
+            const { token } = req.params;
+            console.log("Validating token:", token);
+            const tokenExists = await Token.findOne({ token });
+            if (!tokenExists) {
+                res.status(400).json({ error: "Invalid or expired token." });
+                return
+            }
+            // If token is valid, find the user and update the password
+            const user = await User.findById(tokenExists.user);
+            if (!user) {
+                res.status(404).json({ error: "User not found." });
+                return
+            }
+            user.password = await hashPassword(req.body.password);
+            await Promise.allSettled([user.save(), tokenExists.deleteOne()]);
+            res.send("Password updated successfully!");
+        } catch (error) {
+            res.status(500).json({ error: "An error occurred while validating the token." });
+        }
+    }
+
 }

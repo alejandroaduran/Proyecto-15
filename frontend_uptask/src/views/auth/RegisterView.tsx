@@ -141,6 +141,9 @@ export default function RegisterView() {
         <Link to="/auth/login" className="text-fuchsia-500 hover:underline">
           Already have an account? Login
         </Link>
+        <Link to="/auth/forgot-password" className="text-fuchsia-500 hover:underline">
+          Forgot your password?
+        </Link>
       </nav>
     </>
   )
