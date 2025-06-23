@@ -111,4 +111,45 @@ export class AuthController {
         }
 
     }
+
+        static requestConfirmationCode = async (req: Request, res: Response) => {
+        //    res.send("Creating account...");
+        try {
+            const { email } = req.body;
+
+            // Check if the user already exists
+            const user = await User.findOne({ email });
+            if (!user) {
+                const error = new Error("User not found.");
+                res.status(404).json({ error: error.message });
+                return;
+            }
+
+            if( user.confirmed) {
+                const error = new Error("User already confirmed.");
+                res.status(403).json({ error: error.message });
+                return;
+            }
+
+            //Generate a confirmation token
+            const token = new Token()
+            token.token = generateToken()
+            token.user = user.id
+
+            //send email
+            AuthEmail.sendConfirmationEmail(
+                {
+                    email: String(user.email),
+                    name: String(user.name),
+                    token: String(token.token)
+                }
+            )
+
+            await Promise.allSettled([user.save(), token.save()]);
+            res.send("Token sent! check your email to confirm your account.");
+
+        } catch (error) {
+            res.status(500).json({ error: "An error occurred while creating the account." });
+        }
+    }
 }

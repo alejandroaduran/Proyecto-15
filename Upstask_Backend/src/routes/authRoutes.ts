@@ -19,17 +19,23 @@ router.post('/create-account',
     handleInputErrors,
     AuthController.createAccount)
 
-    router.post("/confirm-account",
-        body("token").notEmpty().withMessage("Token is required"),
-        handleInputErrors,
-        AuthController.confirmAccount
-    )
+router.post("/confirm-account",
+    body("token").notEmpty().withMessage("Token is required"),
+    handleInputErrors,
+    AuthController.confirmAccount
+)
 
-    router.post("/login",
-        body("email").isEmail().withMessage("Invalid email format"),
-        body("password").notEmpty().withMessage("Password is required"),
-        handleInputErrors,
-        AuthController.login
-    )
+router.post("/login",
+    body("email").isEmail().withMessage("Invalid email format"),
+    body("password").notEmpty().withMessage("Password is required"),
+    handleInputErrors,
+    AuthController.login
+)
+
+router.post("/request-code",
+    body("email").isEmail().withMessage("Invalid email format"),
+    handleInputErrors,
+    AuthController.requestConfirmationCode
+)
 
 export default router
