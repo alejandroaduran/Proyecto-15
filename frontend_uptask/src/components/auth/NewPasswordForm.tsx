@@ -15,7 +15,7 @@ export default function NewPasswordForm({ token }: NewPasswordFormProps) {
     const navigate = useNavigate()
     const initialValues: NewPasswordForm = {
         password: '',
-        password_confirmation: '',
+        passwordConfirmation: '',
     }
     const { register, handleSubmit, watch, reset, formState: { errors } } = useForm({ defaultValues: initialValues });
 
@@ -32,8 +32,8 @@ export default function NewPasswordForm({ token }: NewPasswordFormProps) {
     })
 
     const handleNewPassword = (formData: NewPasswordForm) => {
-        const data ={
-            formData,
+        const data = {
+            ...formData,
             token
         }
         mutate(data);
@@ -78,18 +78,18 @@ export default function NewPasswordForm({ token }: NewPasswordFormProps) {
                     >Repetir Password</label>
 
                     <input
-                        id="password_confirmation"
+                        id="passwordConfirmation"
                         type="password"
                         placeholder="Repite Password de Registro"
                         className="w-full p-3  border-gray-300 border"
-                        {...register("password_confirmation", {
+                        {...register("passwordConfirmation", {
                             required: "Repetir Password es obligatorio",
                             validate: value => value === password || 'Los Passwords no son iguales'
                         })}
                     />
 
-                    {errors.password_confirmation && (
-                        <ErrorMessage>{errors.password_confirmation.message}</ErrorMessage>
+                    {errors.passwordConfirmation && (
+                        <ErrorMessage>{errors.passwordConfirmation.message}</ErrorMessage>
                     )}
                 </div>
 

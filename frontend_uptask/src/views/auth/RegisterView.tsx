@@ -12,7 +12,7 @@ export default function RegisterView() {
     name: '',
     email: '',
     password: '',
-    password_confirmation: '',
+    passwordConfirmation: '',
   }
 
   const { register, handleSubmit, watch, reset, formState: { errors } } = useForm<UserRegistrationForm>({ defaultValues: initialValues });
@@ -116,18 +116,18 @@ export default function RegisterView() {
           >Repeat Password</label>
 
           <input
-            id="password_confirmation"
+            id="passwordConfirmation"
             type="password"
             placeholder="Repeat Password"
             className="w-full p-3  border-gray-300 border"
-            {...register("password_confirmation", {
+            {...register("passwordConfirmation", {
               required: "Repeat Password is required",
               validate: value => value === password || 'Passwords do not match'
             })}
           />
 
-          {errors.password_confirmation && (
-            <ErrorMessage>{errors.password_confirmation.message}</ErrorMessage>
+          {errors.passwordConfirmation && (
+            <ErrorMessage>{errors.passwordConfirmation.message}</ErrorMessage>
           )}
         </div>
 

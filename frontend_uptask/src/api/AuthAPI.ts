@@ -74,10 +74,10 @@ export async function validateToken(formData: ConfirmToken) {
     }
 }
 
-export async function updatePasswordWithToken({ formData, token }: { formData: NewPasswordForm, token: ConfirmToken["token"] }) {
+export async function   updatePasswordWithToken({ password, passwordConfirmation, token }: { password: string, passwordConfirmation: string, token: ConfirmToken["token"] }) {
     try {
         const url = `/auth/update-password/${token}`;
-        const { data } = await api.post<string>(url, formData);
+        const { data } = await api.post<string>(url, { password, passwordConfirmation });
         return data
     } catch (error) {
         if (isAxiosError(error) && error.response) {
