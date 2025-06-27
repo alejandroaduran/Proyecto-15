@@ -1,9 +1,9 @@
 import api from "@/lib/axios";
-import { dashboardProjectSchema, type Project, type ProjectFormData } from "@/types/index";
+import { dashboardProjectSchema, type Project, type ProjectformData } from "@/types/index";
 import { isAxiosError } from "axios";
 
 
-export async function createProject(formData: ProjectFormData) {
+export async function createProject(formData: ProjectformData) {
     try {
         const { data } = await api.post("/projects", formData)
         console.log(data)
@@ -43,7 +43,7 @@ export async function getProjectsById(id: Project["_id"]) {
 }
 
 type projectAPIType = {
-    formData: ProjectFormData,
+    formData: ProjectformData,
     projectId: Project["_id"]
 }
 

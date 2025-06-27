@@ -1,9 +1,9 @@
 import api from "@/lib/axios";
 import { isAxiosError } from "axios";
-import { type TaskFormData, type Project, type Task, taskSchema } from "../types";
+import { type TaskformData, type Project, type Task, taskSchema } from "../types";
 
 type TaskAPI = {
-    formData: TaskFormData;
+    formData: TaskformData;
     projectId: Project["_id"];
     taskId: Task["_id"];
     status: Task["status"];

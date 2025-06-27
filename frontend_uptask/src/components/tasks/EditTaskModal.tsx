@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { useNavigate, useParams } from 'react-router-dom';
-import type { TaskFormData, Task } from '@/types/index';
+import type { TaskformData, Task } from '@/types/index';
 import { useForm } from 'react-hook-form';
 import TaskForm from './TaskForm';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -20,7 +20,7 @@ export default function EditTaskModal({ data, taskId }: EditTaskModalProps) {
     const Params = useParams()
     const projectId = Params.projectId!
 
-    const { register, handleSubmit, formState: { errors }, reset } = useForm<TaskFormData>({
+    const { register, handleSubmit, formState: { errors }, reset } = useForm<TaskformData>({
         defaultValues: {
             name: data.name,
             description: data.description,
@@ -43,7 +43,7 @@ export default function EditTaskModal({ data, taskId }: EditTaskModalProps) {
         }
     })
 
-    const handleEditTask = (formData: TaskFormData) => {
+    const handleEditTask = (formData: TaskformData) => {
         const data = {
             projectId,
             taskId,

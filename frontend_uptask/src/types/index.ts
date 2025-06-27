@@ -35,7 +35,7 @@ export const taskSchema = z.object({
 })
 
 export type Task = z.infer<typeof taskSchema>
-export type TaskFormData = Pick<Task, "name" | "description">
+export type TaskformData = Pick<Task, "name" | "description">
 
 /* Projects */
 export const projectSchema = z.object({
@@ -55,4 +55,4 @@ export const dashboardProjectSchema = z.array(
 )
 
 export type Project = z.infer<typeof projectSchema>
-export type ProjectFormData = Pick<Project, "clientName" | "projectName" | "description">
+export type ProjectformData = Pick<Project, "clientName" | "projectName" | "description">

@@ -1,13 +1,13 @@
 import { Link, useNavigate } from "react-router-dom";
 import ProjectForm from "./ProjectForm";
-import type { Project, ProjectFormData } from "@/types/index";
+import type { Project, ProjectformData } from "@/types/index";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateProject } from "@/api/ProjectAPI";
 import { toast } from "react-toastify";
 
 type EditProjectFormProps = {
-    data: ProjectFormData,
+    data: ProjectformData,
     projectId: Project["_id"]
 }
 
@@ -33,7 +33,7 @@ export default function EditProjectForm({ data, projectId }: EditProjectFormProp
         }
     })
 
-    const handleForm = (formData: ProjectFormData) => {
+    const handleForm = (formData: ProjectformData) => {
         const data = {
             formData,
             projectId

@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form"
 import { useMutation } from "@tanstack/react-query"
 import { toast } from "react-toastify"
 import ProjectForm from "@/components/projects/ProjectForm"
-import type { ProjectFormData } from "@/types/index"
+import type { ProjectformData } from "@/types/index"
 import { createProject } from "@/api/ProjectAPI"
 
 
@@ -11,7 +11,7 @@ export default function CreateProjectView() {
 
     const navigate = useNavigate()
 
-    const initialValues: ProjectFormData = {
+    const initialValues: ProjectformData = {
         projectName: "",
         clientName: "",
         description: ""
@@ -30,7 +30,7 @@ export default function CreateProjectView() {
         }
     })
 
-    const handleForm = async (formData: ProjectFormData) => { mutate(formData) }
+    const handleForm = async (formData: ProjectformData) => { mutate(formData) }
 
     return (
         <>

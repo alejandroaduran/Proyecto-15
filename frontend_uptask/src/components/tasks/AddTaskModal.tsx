@@ -3,7 +3,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import TaskForm from './TaskForm';
-import type { TaskFormData } from '@/types/index';
+import type { TaskformData } from '@/types/index';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createTask } from '@/api/TaskAPI';
 import { toast } from 'react-toastify';
@@ -22,16 +22,16 @@ export default function AddTaskModal() {
     const params = useParams()
     const projectId = params.projectId!
 
-    const initialValues: TaskFormData = {
+    const initialValues: TaskformData = {
         name: "",
         description: "",
     }
     const { register, handleSubmit, formState: { errors }, reset } = useForm({ defaultValues: initialValues })
 
-    const handleCreateTask = (FormData: TaskFormData) => {
-        //console.log("Creating task with data:", FormData);
+    const handleCreateTask = (formData: TaskformData) => {
+        //console.log("Creating task with data:", formData);
         const data = {
-            formData: FormData,
+            formData: formData,
             projectId: projectId
         }
         //console.log("Data to send:", data);
