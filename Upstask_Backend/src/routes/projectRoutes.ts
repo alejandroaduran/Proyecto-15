@@ -10,9 +10,10 @@ import { authenticate } from "../middleware/auth";
 
 const router = Router()
 
+router.use(authenticate) // Apply authentication middleware to all routes in this router
+
 // Create a new project
 router.post("/",
-    authenticate,
     body("projectName")
         .notEmpty().withMessage("Project name is required"),
     body("clientName")

@@ -24,7 +24,12 @@ export class ProjectController {
     static getAllProjects = async (req: Request, res: Response) => {
         try {
             //res.send("Send - Get all projects")
-            const projects = await Project.find({})
+            const projects = await Project.find({
+                $or: [
+                    { manager: { $in: req.user.id } }, // Projects where the user is the manager
+                    //{ collaborators: { $in: req.user.id } } // Projects where the user is a collaborator
+                ]
+            })
             res.json(projects)
         } catch (error) {
             console.log(error)
@@ -42,6 +47,11 @@ export class ProjectController {
             if (!project) {
                 const error = new Error("Project not found")
                 res.status(400).json({ error: error.message })
+            }
+
+            if(project.manager.toString()!== req.user.id) {
+                const error = new Error("Invalid Action")
+                res.status(403).json({ error: error.message })
             }
 
             res.json(project)
@@ -65,7 +75,7 @@ export class ProjectController {
             project.clientName = req.body.clientName
             project.projectName = req.body.projectName
             project.description = req.body.description
-            
+
             await project.save()
             res.send("Project updated")
 
