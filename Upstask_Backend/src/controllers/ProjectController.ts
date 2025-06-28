@@ -8,6 +8,9 @@ export class ProjectController {
         //console.log(req.body)
         const project = new Project(req.body)
 
+        //Assign the user who created the project as the manager
+        project.manager = req.user.id
+
         try {
 
             await project.save()

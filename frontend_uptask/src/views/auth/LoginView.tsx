@@ -20,8 +20,8 @@ export default function LoginView() {
       toast.error(error.message);
       // Display error message to the user
     },
-    onSuccess: (data) => {
-      toast.success(data);
+    onSuccess: () => {
+      toast.success("Initializing session...");
       // Redirect user or show success message
     }
   })

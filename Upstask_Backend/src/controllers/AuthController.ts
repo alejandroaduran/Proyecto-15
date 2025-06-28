@@ -4,6 +4,7 @@ import { checkPassword, hashPassword } from "../utils/auth";
 import Token from "../models/Token";
 import { generateToken } from "../utils/token";
 import { AuthEmail } from "../emails/AuthEmails";
+import { generateJWT } from "../utils/jwt";
 
 
 export class AuthController {
@@ -105,7 +106,18 @@ export class AuthController {
                 res.status(403).json({ error: error.message });
                 return;
             }
-            res.send("Login successful!");
+
+            const isPassWordCorrect = await checkPassword(password, user.password.toString());
+            if (!isPassWordCorrect) {
+                const error = new Error("Invalid email or password.");
+                res.status(401).json({ error: error.message });
+                return;
+            }
+            // Generate JWT token
+            const token = generateJWT({id: user.id});
+
+            res.send(token);
+
         } catch (error) {
             res.status(500).json({ error: "An error occurred while logging in." });
         }
