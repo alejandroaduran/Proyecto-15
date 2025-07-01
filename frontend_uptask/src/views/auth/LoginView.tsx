@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import type { UserLoginForm } from "@/types/index";
 import ErrorMessage from "@/components/ErrorMessage";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { authenticateUser } from "@/api/AuthAPI";
 import { toast } from "react-toastify";
@@ -13,6 +13,7 @@ export default function LoginView() {
     password: '',
   }
   const { register, handleSubmit, formState: { errors } } = useForm({ defaultValues: initialValues })
+  const navigate = useNavigate();
 
   const { mutate } = useMutation({
     mutationFn: authenticateUser,
@@ -23,6 +24,7 @@ export default function LoginView() {
     onSuccess: () => {
       toast.success("Initializing session...");
       // Redirect user or show success message
+      navigate("/", { replace: true });
     }
   })
 
@@ -30,11 +32,11 @@ export default function LoginView() {
 
   return (
     <>
-               <h1 className="text-5xl font-black text-white">Log in</h1>
-            <p className="text-2xl font-light text-white mt-5 pb-4">
-                Fill out the form to {''}
-                <span className=" text-fuchsia-500 font-bold "> Log in</span>
-            </p>
+      <h1 className="text-5xl font-black text-white">Log in</h1>
+      <p className="text-2xl font-light text-white mt-5 pb-4">
+        Fill out the form to {''}
+        <span className=" text-fuchsia-500 font-bold "> Log in</span>
+      </p>
       <form
         onSubmit={handleSubmit(handleLogin)}
         className="space-y-8 p-10 bg-white"
