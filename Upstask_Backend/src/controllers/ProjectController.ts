@@ -49,7 +49,7 @@ export class ProjectController {
                 res.status(400).json({ error: error.message })
             }
 
-            if(project.manager.toString()!== req.user.id) {
+            if (project.manager.toString() !== req.user.id) {
                 const error = new Error("Invalid Action")
                 res.status(403).json({ error: error.message })
             }
@@ -72,6 +72,12 @@ export class ProjectController {
                 const error = new Error("Project not found")
                 res.status(400).json({ error: error.message })
             }
+
+            if (project.manager.toString() !== req.user.id) {
+                const error = new Error("Invalid Action")
+                res.status(403).json({ error: error.message })
+            }
+
             project.clientName = req.body.clientName
             project.projectName = req.body.projectName
             project.description = req.body.description
@@ -94,6 +100,10 @@ export class ProjectController {
             if (!project) {
                 const error = new Error("Project not found")
                 res.status(400).json({ error: error.message })
+            }
+            if (project.manager.toString() !== req.user.id) {
+                const error = new Error("Invalid Action")
+                res.status(403).json({ error: error.message })
             }
             await project.deleteOne()
             res.send("Project deleted")
