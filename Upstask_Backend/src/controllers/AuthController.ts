@@ -114,7 +114,7 @@ export class AuthController {
                 return;
             }
             // Generate JWT token
-            const token = generateJWT({id: user.id});
+            const token = generateJWT({ id: user.id });
 
             res.send(token);
 
@@ -235,6 +235,15 @@ export class AuthController {
             res.send("Password updated successfully!");
         } catch (error) {
             res.status(500).json({ error: "An error occurred while validating the token." });
+        }
+    }
+
+    static user = async (req: Request, res: Response) => {
+        try {
+            res.json(req.user);
+            return 
+        } catch (error) {
+            res.status(500).json({ error: "An error occurred while fetching user data." });
         }
     }
 
