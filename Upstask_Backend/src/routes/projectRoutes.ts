@@ -115,12 +115,25 @@ router.post("/:projectId/team/find",
     TeamMemberController.findMemberByEmail
 )
 
+router.get("/:projectId/team", (req, res) => {
+    TeamMemberController.getProjectTeam
+}
+)
+
 router.post("/:projectId/team",
     body("id")
         .notEmpty().withMessage("ID is required")
         .isMongoId().withMessage("Invalid ID format"),
     handleInputErrors,
     TeamMemberController.addMemberById
+)
+
+router.delete("/:projectId/team",
+    body("id")
+        .notEmpty().withMessage("ID is required")
+        .isMongoId().withMessage("Invalid ID format"),
+    handleInputErrors,
+    TeamMemberController.removeMemberById
 )
 
 export default router

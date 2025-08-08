@@ -1,4 +1,4 @@
-import { Navigate, useNavigate, useParams } from 'react-router-dom'
+import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { getProjectsById } from '@/api/ProjectAPI'
 import AddTaskModal from '@/components/tasks/AddTaskModal'
@@ -34,13 +34,20 @@ export default function ProjectDetailsView() {
                 >
                     Add Task
                 </button>
+                <Link
+                    to={`/projects/${projectId}/team`}
+                    className=' bg-purple-400 hover:bg-purple-500 px-10 py-3 text-white text-xl font-bold cursor-pointer transition-colors'
+
+                >
+                    Colaborators
+                </Link>
             </nav>
-            <TaskList 
-            tasks={data.tasks}
+            <TaskList
+                tasks={data.tasks}
             />
             <AddTaskModal />
             <EditTaskData />
-            <TaskModalDetails/>
+            <TaskModalDetails />
         </>
     )
 }
